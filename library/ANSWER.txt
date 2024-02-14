@@ -1,0 +1,66 @@
+SELECT and WHERE / Project database
+1.
+select * from person;
+
+2.
+select firstname, lastname from person order by lastname;
+
+3.
+select distinct city from person;
+
+4.
+select * from person where firstname='Jim';
+
+5.
+select * from person where city='Turku' and birth_year > 1980;
+
+6.
+select * from project where place is NULL;
+
+7.
+select * from project where NOT place is NULL;
+
+8.
+select firstname, lastname, year(curdate()) - birth_year as 'age' from person;
+
+AGGREGATE FUNCTIONS / Library database
+1.
+select author, count(author) from book group by author;
+
+2.
+select author, group_concat(name) as 'books' from book group by author;
+
+3.
+select postalcode, count(id_borrower) as 'amount of borrowers' from borrower group by postalcode;
+
+JOIN / Library database
+1.
+select firstname, lastname,name
+from borrower inner join borrow on borrower.id_borrower=borrow.id_borrower
+inner join book on book.id_book=borrow.id_book;
+
+2.
+select concat(firstname," ", lastname) as 'borrower name',name as 'book name'
+from borrower inner join borrow on borrower.id_borrower=borrow.id_borrower
+inner join book on book.id_book=borrow.id_book;
+
+3.
+select concat(firstname," ", lastname) as 'borrower name',group_concat(name) as 'books'
+from borrower inner join borrow on borrower.id_borrower=borrow.id_borrower
+inner join book on book.id_book=borrow.id_book
+group by borrower.id_borrower;
+
+SUBQUERY / Library database
+1.
+select firstname, lastname from borrower where id_borrower in (
+select id_borrower from borrow);
+
+2.
+select firstname, lastname from borrower where id_borrower in (
+select id_borrower from borrow where return_date < current_date);
+
+UNION / Library database
+1.
+select author, count(author) as 'amount of books' from book group by author
+union
+select 'TOTAL',count(author) from book;
